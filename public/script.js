@@ -7,6 +7,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const copyright = document.querySelector(".copyright");
     if (copyright) copyright.innerHTML = `© ${new Date().getFullYear()} PPCXPERTs. All Rights Reserved.`;
 
+    /* Add Case Studies to the shared navigation where it is not already present. */
+    document.querySelectorAll(".nav-links").forEach(function (navLinks) {
+        if (!navLinks.querySelector('a[href="case-studies.html"]')) {
+            const link = document.createElement("a");
+            link.href = "case-studies.html";
+            link.textContent = "Case Studies";
+            navLinks.insertBefore(link, navLinks.querySelector('a[href="about.html"]') || null);
+        }
+    });
+
     /* -----------------------------------------
        Responsive Mobile Hamburger Navigation
        ----------------------------------------- */
@@ -141,39 +151,21 @@ document.addEventListener("DOMContentLoaded", function () {
             let valid = true;
             if (status) { status.textContent = ""; status.classList.remove("error"); }
 
-            if (!nameField.value.trim()) {
-                setError(nameField, "Please enter your name.");
-                valid = false;
-            } else if (nameField.value.trim().length < 2) {
-                setError(nameField, "Please enter a valid name.");
-                valid = false;
-            }
+            if (!nameField.value.trim()) { setError(nameField, "Please enter your name."); valid = false; }
+            else if (nameField.value.trim().length < 2) { setError(nameField, "Please enter a valid name."); valid = false; }
 
             const email = emailField.value.trim();
-            if (!email) {
-                setError(emailField, "Please enter your email address.");
-                valid = false;
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                setError(emailField, "Please enter a valid email address.");
-                valid = false;
-            }
+            if (!email) { setError(emailField, "Please enter your email address."); valid = false; }
+            else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError(emailField, "Please enter a valid email address."); valid = false; }
 
-            if (!messageField.value.trim()) {
-                setError(messageField, "Please tell us a little about your PPC needs.");
-                valid = false;
-            } else if (messageField.value.trim().length < 10) {
-                setError(messageField, "Please provide at least 10 characters.");
-                valid = false;
-            }
+            if (!messageField.value.trim()) { setError(messageField, "Please tell us a little about your PPC needs."); valid = false; }
+            else if (messageField.value.trim().length < 10) { setError(messageField, "Please provide at least 10 characters."); valid = false; }
 
             if (!valid) {
                 event.preventDefault();
                 const firstInvalid = contactForm.querySelector(".form-group.invalid input, .form-group.invalid textarea");
                 if (firstInvalid) firstInvalid.focus();
-                if (status) {
-                    status.textContent = "Please correct the highlighted fields and try again.";
-                    status.classList.add("error");
-                }
+                if (status) { status.textContent = "Please correct the highlighted fields and try again."; status.classList.add("error"); }
             }
         });
     }
@@ -205,12 +197,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const ctaButtons = document.querySelectorAll('a[href="#contact"], a[href*="wa.me"]');
     ctaButtons.forEach(function (button) {
-        button.addEventListener("click", function () {
-            console.log("CTA clicked:", this.textContent.trim());
-        });
+        button.addEventListener("click", function () { console.log("CTA clicked:", this.textContent.trim()); });
     });
 
-    document.querySelectorAll(".bar").forEach(function (bar, index) {
-        bar.style.animationDelay = `${index * 0.08}s`;
-    });
+    document.querySelectorAll(".bar").forEach(function (bar, index) { bar.style.animationDelay = `${index * 0.08}s`; });
 });
