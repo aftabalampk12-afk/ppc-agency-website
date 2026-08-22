@@ -7,6 +7,69 @@ document.addEventListener("DOMContentLoaded", function () {
     const copyright = document.querySelector(".copyright");
     if (copyright) copyright.innerHTML = `© ${new Date().getFullYear()} PPCXPERTs. All Rights Reserved.`;
 
+    /* -----------------------------------------
+       Responsive Mobile Hamburger Navigation
+       ----------------------------------------- */
+    const header = document.querySelector(".header");
+    const nav = document.querySelector(".nav");
+    const navLinks = document.querySelector(".nav-links");
+
+    if (header && nav && navLinks) {
+        const mobileStyle = document.createElement("style");
+        mobileStyle.textContent = `
+            .mobile-menu-toggle{display:none;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:1px solid rgba(22,101,52,.18);border-radius:11px;background:rgba(255,255,255,.72);color:#14532d;cursor:pointer;flex:0 0 auto;transition:all .25s ease}
+            .mobile-menu-toggle:hover{background:#dcfce7;border-color:rgba(22,163,74,.35);color:#166534}
+            .mobile-menu-toggle .hamburger-lines,.mobile-menu-toggle .hamburger-lines:before,.mobile-menu-toggle .hamburger-lines:after{display:block;width:20px;height:2px;border-radius:2px;background:currentColor;transition:transform .25s ease,opacity .2s ease}
+            .mobile-menu-toggle .hamburger-lines{position:relative}
+            .mobile-menu-toggle .hamburger-lines:before,.mobile-menu-toggle .hamburger-lines:after{content:"";position:absolute;left:0}
+            .mobile-menu-toggle .hamburger-lines:before{top:-6px}.mobile-menu-toggle .hamburger-lines:after{top:6px}
+            .mobile-menu-toggle[aria-expanded="true"] .hamburger-lines{background:transparent}
+            .mobile-menu-toggle[aria-expanded="true"] .hamburger-lines:before{transform:translateY(6px) rotate(45deg)}
+            .mobile-menu-toggle[aria-expanded="true"] .hamburger-lines:after{transform:translateY(-6px) rotate(-45deg)}
+            @media(max-width:767px){
+                .nav{position:relative;flex-wrap:wrap}
+                .mobile-menu-toggle{display:flex;order:3}
+                .nav-button{order:2;margin-left:auto}
+                .nav-links{display:none;order:4;flex-basis:100%;width:100%;flex-direction:column;align-items:stretch;gap:4px;margin-top:4px;padding:8px;border-radius:14px;background:rgba(255,255,255,.97);box-shadow:0 14px 30px rgba(15,23,42,.12)}
+                .nav-links.mobile-open{display:flex}
+                .nav-links a{width:100%;padding:12px 14px;text-align:left;font-size:14px}
+                .nav-links a:after{display:none}
+            }
+            @media(min-width:768px){.mobile-menu-toggle{display:none!important}.nav-links{display:flex!important}}
+        `;
+        document.head.appendChild(mobileStyle);
+
+        const toggle = document.createElement("button");
+        toggle.type = "button";
+        toggle.className = "mobile-menu-toggle";
+        toggle.setAttribute("aria-label", "Open navigation menu");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-controls", "mobile-navigation");
+        toggle.innerHTML = '<span class="hamburger-lines" aria-hidden="true"></span>';
+        navLinks.id = "mobile-navigation";
+        nav.insertBefore(toggle, navLinks);
+
+        function closeMobileMenu() {
+            navLinks.classList.remove("mobile-open");
+            toggle.setAttribute("aria-expanded", "false");
+            toggle.setAttribute("aria-label", "Open navigation menu");
+        }
+
+        toggle.addEventListener("click", function () {
+            const isOpen = navLinks.classList.toggle("mobile-open");
+            toggle.setAttribute("aria-expanded", String(isOpen));
+            toggle.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+        });
+
+        navLinks.querySelectorAll("a").forEach(function (link) {
+            link.addEventListener("click", closeMobileMenu);
+        });
+
+        window.addEventListener("resize", function () {
+            if (window.innerWidth >= 768) closeMobileMenu();
+        });
+    }
+
     const navigationLinks = document.querySelectorAll('a[href^="#"]');
     navigationLinks.forEach(function (link) {
         link.addEventListener("click", function (event) {
@@ -132,10 +195,10 @@ document.addEventListener("DOMContentLoaded", function () {
         revealObserver.observe(element);
     });
 
-    const header = document.querySelector(".header");
     function handleHeaderScroll() {
-        if (!header) return;
-        header.style.boxShadow = window.scrollY > 20 ? "0 8px 30px rgba(15, 23, 42, 0.08)" : "none";
+        const currentHeader = document.querySelector(".header");
+        if (!currentHeader) return;
+        currentHeader.style.boxShadow = window.scrollY > 20 ? "0 8px 30px rgba(15, 23, 42, 0.08)" : "none";
     }
     window.addEventListener("scroll", handleHeaderScroll);
     handleHeaderScroll();
